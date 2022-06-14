@@ -72,6 +72,8 @@ def UserActive(request, *args, **kwargs):
             zphone=localrequest["phone_number"]
             zuser=localrequest['username']
             zpass=localrequest['password']
+            # pass2=localrequest['password2']
+            
             if(re.fullmatch(regex, zemail)):
                 print('oke')
             else:
@@ -90,7 +92,11 @@ def UserActive(request, *args, **kwargs):
 
                 return JsonResponse({'message' : 'unsuccessfully' , 'status' : False , 'count' : 1 , 'results' : "Email Telah Terdaftar"},
                                     status=404)
-
+                
+            # if Users.objects.filter(password2=pass2) != Users.objects.filter(password=zpass) :
+            #     return JsonResponse({'message' : 'unsuccessfully' , 'status' : False , 'count' : 1 , 'results' : "Password not match"},
+            #                         status=404)
+            
             if Users.objects.filter(phone_number=zphone).count()!=0:
 
                 return JsonResponse({'message' : 'unsuccessfully' , 'status' : False , 'count' : 1 , 'results' : "No Telphone Telah Terdaftar"},
@@ -102,7 +108,7 @@ def UserActive(request, *args, **kwargs):
                                 email=zemail,
                                 first_name=localrequest['first_name'],
                                 last_name=localrequest['last_name'],
-                                is_active=False
+                                is_active=True
                                 )
                         user.set_password(zpass)
                         user.save()                                      
@@ -114,7 +120,8 @@ def UserActive(request, *args, **kwargs):
                                                                 phone_number = zphone,
                                                                 app_id = APP_ID,
                                                                 pin=localrequest["pin"],
-                                                                code=randomDigits(4)
+                                                                code=randomDigits(4),
+                                                                status=0
                                                         )
                         UserSave.save()
                         Modeluser = Users.objects.filter(id=user.id)
@@ -130,4 +137,3 @@ def UserActive(request, *args, **kwargs):
         except Exception as e:
             return JsonResponse({'message' : 'unsuccessfully' , 'status' : False , 'count' : 1 , 'results' : "Data Not Valid"},
                                     status=500)  
-

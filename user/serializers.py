@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
+
 class UserSerializer(serializers.ModelSerializer):
         class Meta:
                 model = Users
@@ -22,7 +23,25 @@ class UserSerializer(serializers.ModelSerializer):
                         'coin',
                         'phone_number',
                         'pin',
+                        'code',
+                        'status']
+
+class UserCheckSerializer(serializers.ModelSerializer):
+        class Meta:
+                model = Users
+                fields = [
+                        'id',
+                        'phone_number',
                         'code']
+class UserSysCheckSerializer(serializers.ModelSerializer):
+   class Meta:
+                model = User
+                fields = [
+                        'id',
+                        'username',
+                        'email',
+                        'is_active',
+                        ]
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 

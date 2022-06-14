@@ -6,17 +6,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from datetime import timedelta
-
+from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.models import User
 from django.conf import settings
 from .models import *
 from .serializers import *
 
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
-
     def validate(self, attrs):
-
         data = super().validate(attrs)
 
         refresh = RefreshToken.for_user(self.user)
@@ -32,6 +30,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data['lastName'] = self.user.last_name
         data['email'] = self.user.email
         data['password'] = self.user.password
+        data['is_active'] = self.user.is_active
         Modeluser = Users.objects.filter(id=self.user.id)
         UsersSerializer = UserSerializer(Modeluser, many=True)
 

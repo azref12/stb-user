@@ -7,9 +7,9 @@ from .custome_jwt import LogoutView, MyTokenObtainPairView
 
 urlpatterns = [
     
-    path ('user/', views_user.UserActive),
-    # url(r'user/$', views_user.UserActive),
+    url(r'user/$', views_user.UserActive),
     url(r'activation/$', views_activation.UserActivation),
+    url(r'getactivation/$', views_activation.UserActivation),
     url(r'changepassword/$', views_changepass.UserPass),
     url(r'login/$', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     url(r'login/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),

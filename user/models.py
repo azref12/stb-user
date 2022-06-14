@@ -9,5 +9,6 @@ class Users (models.Model) :
     phone_number = models.CharField(max_length=50)
     app_id = models.IntegerField(blank=False,default=0)
     pin=models.IntegerField(blank=False,default=0)
-    code=models.IntegerField(blank=False,default=0)
-
+    code=models.IntegerField(blank=True,default=0)
+    status=models.IntegerField(blank=False,default=0)
+ 

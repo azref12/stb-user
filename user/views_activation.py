@@ -43,22 +43,47 @@ APP_ID=getenv('APP_ID')
 t = datetime.datetime.now()
 
 @csrf_exempt
-@api_view(["PUT"])
+@api_view(["PUT", "GET"])
 @permission_classes([AllowAny])
 def UserActivation(request, *args, **kwargs):
+
+    if request.method == 'GET':
+        try :
+            # localrequest = JSONParser().parse(request) 
+            Modeluser = User.objects.filter(username=request.GET['user'])
+            UsersSerializer1 = UserSysCheckSerializer(Modeluser, many=True)  
+            Modeluser = User.objects.get(username=request.GET['user'])
+            Modeluser1 = Users.objects.filter(id=Modeluser.id)
+
+            UsersSerializer = UserCheckSerializer(Modeluser1, many=True)  
+            # print(UsersSerializer.data)
+            # UsersSerializer1 = UsersSerializer(Modeluser1, many=True)  
+            formater = {
+                                        "master": UsersSerializer.data,
+                                        "detail": UsersSerializer1.data
+                                }
+            
+
+            return JsonResponse({'message' : 'successfully' , 'status' : True , 'count' : 1 , 'results' : formater})
+        except Users.DoesNotExist:
+            return JsonResponse({'message' : 'unsuccessfully' , 'status' : False , 'count' : 1 , 'results' : "User Invalid"})
 
     if request.method == 'PUT':
         try :
             localrequest = JSONParser().parse(request) 
-            Modeluser = Users.objects.get(code=localrequest['code'])
+            Modeluser = Users.objects.get(code=localrequest['codeuser'])
             
             ModelUserl = User.objects.get(pk=Modeluser.id)
             if localrequest['username']==ModelUserl.username :
-                ModelUserl.is_active=True
-                ModelUserl.save()
-
-                UsersSerializer = UserSerializer(Modeluser, data={"code":0}, partial=True)    
-            
+                localserializer = UserSerializer(Modeluser, data=localrequest, partial=True)       
+                if localserializer.is_valid(): 
+                    localserializer.save(
+                        
+                                    code=0,
+                                    status=1
+                                        )
+                    localserializer.save()
+        
 
                 return JsonResponse({'message' : 'successfully' , 'status' : True , 'count' : 1 , 'results' : 'User Is Active'})
             else:
